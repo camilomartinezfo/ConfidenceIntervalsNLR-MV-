@@ -1,1 +1,65 @@
+
+# lectura de datos.
 data = read.csv("Puromycin.csv")
+
+# Estimador de mínimos cuadrados ordinarios no lineales.
+
+nonlinearmod = nls(Velocity ~ beta1*Conc/(beta2 + Conc), data = data, 
+                   start = list(beta1=205, beta2=0.08),
+                   trace = TRUE)
+summary(nonlinearmod)
+
+# Intervalos de confianza para la respuesta media.
+
+# Método delta
+
+fgh2 <- deriv(Velocity ~ beta1*Conc/(beta2 + Conc), c("beta1", "beta2"), 
+              function(beta1, beta2, Conc){} ) 
+
+x.new <- seq(0.01, 1.2, by=0.01)
+beta2.est <- coef(nonlinearmod)
+f.new <- fgh2(beta2.est[1],beta2.est[2], x.new)
+
+g.new <- attr(f.new,"gradient")
+V.beta2 <- vcov(nonlinearmod)
+GS=rowSums((g.new%*%V.beta2)*g.new)
+
+t <- qt(0.975,10)
+deltaf <- sqrt(GS)*t
+
+ci.lines<-function(nonlinearmod){
+  
+  yv <- f.new
+  ci<-deltaf
+  uyv<-yv+ci
+  lyv<-yv-ci
+  lines(x.new,uyv,lty=3)
+  lines(x.new,lyv,lty=3)
+    }
+
+plot(data$Conc,data$Velocity,pch=20,main="", cex.lab=1.5,
+     cex.main=1.5, xlab = "Concentración", ylab= "Velocidad", xlim = c(0, 1.2),
+     ylim = c(50,210), col = "red")
+x <- seq(0,1.2,0.01)
+curve(212.7*x/(0.06412+ x), add = TRUE, col = "black", lwd =2)
+ci.lines(nonlinearmod)
+
+# Aproximación Bates & Watts (1988, p. 59)
+
+xnew <- seq(min(data$Conc),max(data$Conc),0.01) 
+ynew = theta1*xnew/(theta2 + xnew) 
+windows(width = 5.5, height = 7)
+par(mfrow=c(1,1),mai=c(0.9,0.9,0.5,0.5),mgp=c(2.0,0.6,0),cex=1.2)
+plot(data$Conc, data$Velocity, pch=20, col = "red", las =1,
+     xlab = "Concentration (ppm)",
+     ylab = expression(Velocity ~ (counts/min^2)))
+lines(xnew,ynew,lwd=2)
+lines(xnew,ynew+summary(nonlinearmod)$sigma,lwd=2,lty=3)
+lines(xnew,ynew-summary(nonlinearmod)$sigma,lwd=2,lty=3)
+
+# Simulación de Monte Carlo
+
+
+
+
+
