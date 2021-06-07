@@ -148,7 +148,6 @@ ci.lines<-function(){
 }
 
 # Intervalos de confianza para la respuesta media
-windows(5,7.7)
 plot(data$Conc,data$Velocity,pch=20,main="", cex.lab=1.5,
      cex.main=1.5, xlab = "Concentración (ppm)", 
      ylab= expression(Velocity ~ (counts/min^2)), xlim = c(0, 1.2),
@@ -159,7 +158,6 @@ ci.lines()
 
 
 # Aproximación Bates & Watts (1988, p. 59)
-windows(5,7.7)
 theta1 = 222.50792836
 theta2 = 0.07393871
 xnew <- seq(min(data$Conc),1.2,0.01) 
