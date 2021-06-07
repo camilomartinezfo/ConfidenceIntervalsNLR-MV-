@@ -104,8 +104,10 @@ FIM <- solve(modelML$hessian)
 
 se <- sqrt(diag(FIM))
 
+# Cuántil t
 t <- modelML$par/se
 
+# Valor P
 pval <- 2*(1-pt(abs(t),length(data$Conc)-3))
 
 results <- as.matrix(cbind(modelML$par,se,t,pval))
@@ -113,6 +115,7 @@ colnames (results) <- c("parameter","se","t","p")
 rownames (results) <- c("beta1","beta2","sigma")
 print(results,digits=5)
 
+# Estimadores paramétricos.
 etas <- modelML$par
 etas
 
