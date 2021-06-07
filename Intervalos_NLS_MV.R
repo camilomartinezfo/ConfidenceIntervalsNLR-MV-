@@ -63,5 +63,57 @@ lines(xnew,ynew-summary(nonlinearmod)$sigma,lwd=2,lty=3)
 
 
 
+# Estimador de máxima verosimilitud
+
+library(optimr)
+
+loglik.Puromycin= function(parameters, C, V)
+{
+  logL =  tryCatch(
+    {
+      beta1 = parameters["b1"]
+      beta2 = parameters["b2"] 
+      sigma =  parameters["sigma"]
+      model =  beta1*C(beta2 + C)
+      logL <- sum(dnorm(V, model, sigma, log = TRUE)) 
+    },
+    error = function(cond)
+    {
+      logL = -999999
+    })
+  print(logL)
+  return(-logL)
+}
+
+# We then maximize this function using optim.
+parameters = c(b1 = 212.7, b2 =0.06412, sigma = 1)
+modelML = with(subset(data,!is.na(Velocity) & !is.na(Conc)),
+               optimr(par = parameters,
+                      fn  = loglik.Puromycin,
+                      C   = Conc,
+                      V   = Velocity,
+                      control = list(maxiter=1000),
+                      method = "Nelder-Mead",
+                      hessian = TRUE))
+
+
+FIM <- solve(modelML$hessian)
+
+
+se <- sqrt(diag(FIM))
+
+t <- modelML$par/se
+
+pval <- 2*(1-pt(abs(t),length(my_data$dbh.cm)-4))
+
+# Displaying results
+results <- as.matrix(cbind(modelML$par,se,t,pval))
+colnames (results) <- c("parameter","se","t","p")
+rownames (results) <- c("beta1","beta2","sigma")
+print(results,digits=5)
+
+# Storing estimated coefficients
+etas <- modelML$par
+etas
 
 
