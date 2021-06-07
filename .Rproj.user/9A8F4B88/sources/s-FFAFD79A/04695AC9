@@ -1,7 +1,7 @@
 {
     "id": "04695AC9",
-    "path": "~/Crecimiento Forestal/Material_Sergio/Intervalos de confianza/Confidence-IntervalsNLR-MV-/Intervalos_NLS_MV.R",
-    "project_path": "Intervalos_NLS_MV.R",
+    "path": "~/Crecimiento Forestal/Material_Sergio/Intervalos de confianza/Confidence-IntervalsNLR-MV-/Intervalos_NLS.R",
+    "project_path": "Intervalos_NLS.R",
     "type": "r_source",
     "hash": "1633011844",
     "contents": "",
@@ -21,7 +21,7 @@
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1623102135919,
+    "last_content_update": 1623102135,
     "read_only": false,
     "read_only_alternatives": []
 }
