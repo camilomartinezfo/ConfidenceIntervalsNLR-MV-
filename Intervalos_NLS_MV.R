@@ -170,3 +170,5 @@ plot(data$Conc, data$Velocity, pch=20, col = "red", las =1,
 lines(xnew,ynew,lwd=2)
 lines(xnew,ynew+summary(nonlinearmod)$sigma,lwd=2,lty=3)
 lines(xnew,ynew-summary(nonlinearmod)$sigma,lwd=2,lty=3)
+
+# Simulación de Monte Carlo
