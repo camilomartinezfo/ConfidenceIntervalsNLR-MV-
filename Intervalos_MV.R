@@ -209,3 +209,33 @@ lines(seq(0.01,1.2,0.01),Ajustados$`97.5%`,lwd=2, lty=3)
 
 
 
+
+# Representación gráfica de los intervalos.
+
+ci.lines<-function(){
+      
+      yv <- f.new
+      ci<-deltaf
+      uyv<-yv+ci
+      lyv<-yv-ci
+      lines(x.new,uyv,lty=5, lwd=2, col="coral")
+      lines(x.new,lyv,lty=5, lwd=2, col="coral")
+}
+
+
+plot(data$Conc,data$Velocity,pch=16,main="", cex.lab=1.2, 
+     xlab = "Concentración (ppm)", 
+     ylab= expression(Velocity ~ (counts/min^2)), xlim = c(0, 1.2),
+     ylim = c(50,220), col = "darkgray")
+x <- seq(0,1.2,0.01)
+curve(222.50792836*x/(0.07393871 + x), add = TRUE, col = "black", lwd=2)
+ci.lines()
+
+lines(xnew,ynew+summary(nonlinearmod)$sigma,lwd=2,lty=1,col="yellow3")
+lines(xnew,ynew-summary(nonlinearmod)$sigma,lwd=2,lty=1,col="yellow3")
+
+lines(seq(0.01,1.2,0.01),Ajustados$`2.5%`,lwd=2, lty=5,col="turquoise4")
+lines(seq(0.01,1.2,0.01),Ajustados$`97.5%`,lwd=2, lty=5,col="turquoise4")
+
+legend(x="bottomright",c("Delta","Bates & Watts","Monte Carlo"),lty=c(5,1,5),
+       lwd=c(2,2,2), col=c("coral","yellow3","turquoise4"),cex=0.7,title="Método")
