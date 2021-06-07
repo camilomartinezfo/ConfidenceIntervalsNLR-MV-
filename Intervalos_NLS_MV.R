@@ -4,7 +4,7 @@ data = read.csv("Puromycin.csv")
 
 
 ################################################################################
-################ Estimadores de Máxima verosimilitud ###########################
+################ Estimadores de Mínimos Cuadrados ##############################
 ################################################################################
 
 nonlinearmod = nls(Velocity ~ beta1*Conc/(beta2 + Conc), data = data, 
