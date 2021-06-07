@@ -42,8 +42,8 @@ ci.lines<-function(){
   lines(x.new,lyv, lty=3, lwd=2)
     }
 
-plot(data$Conc,data$Velocity,pch=20,main="", cex.lab=1.5,
-     cex.main=1.5, xlab = "Concentración (ppm)", 
+plot(data$Conc,data$Velocity,pch=20,main="", cex.lab=1.2, 
+     xlab = "Concentración (ppm)", 
      ylab= expression(Velocity ~ (counts/min^2)), xlim = c(0, 1.2),
      ylim = c(50,220), col = "red")
 x <- seq(0,1.2,0.01)
@@ -147,7 +147,7 @@ predictNLS_MC <- function(object, var.pred, newdata, level = 0.95,
 Ajustados <- predictNLS_MC(object=nonlinearmod, var.pred = "Conc", 
                            newdata = data.frame(x.new))
 Ajustados <- as.data.frame(Ajustados)
-plot(data$Conc, data$Velocity, pch=20, col = "red", las =1,
+plot(data$Conc, data$Velocity, pch=20, col = "red", las =1, cex.lab=1.2,
      xlab = "Concentration (ppm)",
      ylab = expression(Velocity ~ (counts/min^2)),ylim=c(45,220))
 lines(seq(0.01,1.2,0.01),Ajustados$fit,lwd=2)
@@ -247,8 +247,8 @@ ci.lines<-function(){
 }
 
 # Intervalos de confianza para la respuesta media
-plot(data$Conc,data$Velocity,pch=20,main="", cex.lab=1.5,
-     cex.main=1.5, xlab = "Concentración (ppm)", 
+plot(data$Conc,data$Velocity,pch=20,main="", cex.lab=1.2, 
+     xlab = "Concentración (ppm)", 
      ylab= expression(Velocity ~ (counts/min^2)), xlim = c(0, 1.2),
      ylim = c(50,220), col = "red")
 x <- seq(0,1.2,0.01)
