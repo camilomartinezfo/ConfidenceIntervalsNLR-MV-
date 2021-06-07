@@ -74,7 +74,7 @@ loglik.Puromycin= function(parameters, C, V)
       beta1 = parameters["b1"]
       beta2 = parameters["b2"] 
       sigma =  parameters["sigma"]
-      model =  beta1*C(beta2 + C)
+      model =  beta1*C/(beta2 + C)
       logL <- sum(dnorm(V, model, sigma, log = TRUE)) 
     },
     error = function(cond)
