@@ -1,10 +1,3 @@
-library(tidyverse)
-library(broom)
-library(skimr)
-library(purrr)
-library(nlsrk)
-library(nlstools)
-
 data = read.csv("Puromycin.csv")
 data =as_tibble(data)
 glimpse(data)
