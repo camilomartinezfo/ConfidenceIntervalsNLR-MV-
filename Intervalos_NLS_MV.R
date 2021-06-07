@@ -38,7 +38,8 @@ ci.lines<-function(nonlinearmod){
     }
 
 plot(data$Conc,data$Velocity,pch=20,main="", cex.lab=1.5,
-     cex.main=1.5, xlab = "Concentración", ylab= "Velocidad", xlim = c(0, 1.2),
+     cex.main=1.5, xlab = "Concentración (ppm)", 
+     ylab= expression(Velocity ~ (counts/min^2)), xlim = c(0, 1.2),
      ylim = c(50,210), col = "red")
 x <- seq(0,1.2,0.01)
 curve(212.7*x/(0.06412+ x), add = TRUE, col = "black", lwd =2)
@@ -46,9 +47,10 @@ ci.lines(nonlinearmod)
 
 # Aproximación Bates & Watts (1988, p. 59)
 
+theta1 = 2.127e+02
+theta2 = 6.412e-02 
 xnew <- seq(min(data$Conc),max(data$Conc),0.01) 
 ynew = theta1*xnew/(theta2 + xnew) 
-windows(width = 5.5, height = 7)
 par(mfrow=c(1,1),mai=c(0.9,0.9,0.5,0.5),mgp=c(2.0,0.6,0),cex=1.2)
 plot(data$Conc, data$Velocity, pch=20, col = "red", las =1,
      xlab = "Concentration (ppm)",
