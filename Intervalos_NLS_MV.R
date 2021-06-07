@@ -2,7 +2,10 @@
 # lectura de datos.
 data = read.csv("Puromycin.csv")
 
-# Estimador de mínimos cuadrados ordinarios no lineales.
+
+################################################################################
+################ Estimadores de Máxima verosimilitud ###########################
+################################################################################
 
 nonlinearmod = nls(Velocity ~ beta1*Conc/(beta2 + Conc), data = data, 
                    start = list(beta1=205, beta2=0.08),
@@ -11,7 +14,9 @@ summary(nonlinearmod)
 
 # Intervalos de confianza para la respuesta media.
 
+
 # Método delta
+#-------------------------------------------------------------------------------
 
 fgh2 <- deriv(Velocity ~ beta1*Conc/(beta2 + Conc), c("beta1", "beta2"), 
               function(beta1, beta2, Conc){} ) 
@@ -45,7 +50,9 @@ x <- seq(0,1.2,0.01)
 curve(212.7*x/(0.06412+ x), add = TRUE, col = "black", lwd =2)
 ci.lines()
 
+
 # Aproximación Bates & Watts (1988, p. 59)
+#-------------------------------------------------------------------------------
 
 theta1 = 2.127e+02
 theta2 = 6.412e-02 
@@ -61,11 +68,11 @@ lines(xnew,ynew+summary(nonlinearmod)$sigma,lwd=2,lty=3)
 lines(xnew,ynew-summary(nonlinearmod)$sigma,lwd=2,lty=3)
 
 
-############################
-## Simulación de Monte Carlo
-############################
+# Simulación de Monte Carlo
+#-------------------------------------------------------------------------------
 
-predictNLS_MC <- function(object, var.pred, newdata, level = 0.95, nsim = 10000, ...)
+predictNLS_MC <- function(object, var.pred, newdata, level = 0.95, 
+                          nsim = 10000, ...)
 {
       require(MASS, quietly = TRUE)
       
@@ -112,7 +119,8 @@ predictNLS_MC <- function(object, var.pred, newdata, level = 0.95, nsim = 10000,
             newVCOV[varPLACE, varPLACE] <- predERROR^2
             
             ## create MC simulation matrix
-            simMAT <- mvrnorm(n = nsim, mu = MU, Sigma = newVCOV, empirical = TRUE)
+            simMAT <- mvrnorm(n = nsim, mu = MU, Sigma = newVCOV, 
+                              empirical = TRUE)
             
             ## evaluate expression on rows of simMAT
             EVAL <- eval(EXPR, envir = as.data.frame(simMAT))
@@ -123,18 +131,21 @@ predictNLS_MC <- function(object, var.pred, newdata, level = 0.95, nsim = 10000,
             FITTED <- predict(object, newdata = data.frame(PRED))
             MEAN.sim <- mean(EVAL, na.rm = TRUE)
             SD.sim <- sd(EVAL, na.rm = TRUE)
-            QUANT <- quantile(EVAL, c((1 - level)/2, level + (1 - level)/2),na.rm=TRUE)
+            QUANT <- quantile(EVAL, c((1 - level)/2, level + (1 - level)/2),
+                              na.rm=TRUE)
             RES <- c(FITTED, MEAN.sim, SD.sim, QUANT[1], QUANT[2])
             outMAT <- rbind(outMAT, RES)
       }
       
-      colnames(outMAT) <- c("fit", "mean", "sd", names(QUANT[1]), names(QUANT[2]))
+      colnames(outMAT) <- c("fit", "mean", "sd", names(QUANT[1]), 
+                            names(QUANT[2]))
       rownames(outMAT) <- NULL
       
       return(outMAT)  
 }
 
-Ajustados <- predictNLS_MC(object=nonlinearmod, var.pred = "Conc", newdata = data.frame(x.new))
+Ajustados <- predictNLS_MC(object=nonlinearmod, var.pred = "Conc", 
+                           newdata = data.frame(x.new))
 Ajustados <- as.data.frame(Ajustados)
 plot(data$Conc, data$Velocity, pch=20, col = "red", las =1,
      xlab = "Concentration (ppm)",
@@ -143,8 +154,11 @@ lines(seq(0.01,1.2,0.01),Ajustados$fit,lwd=2)
 lines(seq(0.01,1.2,0.01),Ajustados$`2.5%`,lwd=2, lty=3)
 lines(seq(0.01,1.2,0.01),Ajustados$`97.5%`,lwd=2, lty=3)
 
-##################################################
 
+
+################################################################################
+################ Estimadores de Máxima verosimilitud ###########################
+################################################################################
 
 # Estimador de máxima verosimilitud
 
@@ -202,9 +216,12 @@ print(results,digits=5)
 # Estimadores paramétricos.
 betas <- modelML$par
 
-# Intervalos de confianza para la respuesta media.
+
+## Intervalos de confianza para la respuesta media.
+
 
 # Método delta
+#-------------------------------------------------------------------------------
 
 fgh2 <- deriv(Velocity ~ b1*Conc/(b2 + Conc), c("b1", "b2"), 
               function(b1,b2,Conc){} ) 
@@ -240,6 +257,8 @@ ci.lines()
 
 
 # Aproximación Bates & Watts (1988, p. 59)
+#-------------------------------------------------------------------------------
+
 theta1 = 222.50792836
 theta2 = 0.07393871
 xnew <- seq(min(data$Conc),1.2,0.01) 
@@ -254,17 +273,16 @@ lines(xnew,ynew+summary(nonlinearmod)$sigma,lwd=2,lty=3)
 lines(xnew,ynew-summary(nonlinearmod)$sigma,lwd=2,lty=3)
 
 
-###############################################
-# Simulación de Monte Carlo Max verosimilitud 
-###############################################
+# Simulación de Monte Carlo 
+#-------------------------------------------------------------------------------
 
 FittedML <- function(Conc){
       Velocidad = modelML$par[1]*Conc/(modelML$par[2] + Conc)
       return(Velocidad)
 }
 
-
-predictNLS_MV <- function(EXPR, modelo, var.pred, newdata, level = 0.95, nsim = 10000, ...)
+predictNLS_MV <- function(EXPR, modelo, var.pred, newdata, level = 0.95, 
+                          nsim = 10000, ...)
 {
       require(MASS, quietly = TRUE)
       
@@ -308,7 +326,8 @@ predictNLS_MV <- function(EXPR, modelo, var.pred, newdata, level = 0.95, nsim = 
             newVCOV[varPLACE, varPLACE] <- predERROR^2
             
             ## create MC simulation matrix
-            simMAT <- mvrnorm(n = nsim, mu = MU, Sigma = newVCOV, empirical = TRUE)
+            simMAT <- mvrnorm(n = nsim, mu = MU, Sigma = newVCOV, 
+                              empirical = TRUE)
             
             ## evaluate expression on rows of simMAT
             EVAL <- eval(EXPR, envir = as.data.frame(simMAT))
@@ -319,12 +338,14 @@ predictNLS_MV <- function(EXPR, modelo, var.pred, newdata, level = 0.95, nsim = 
             FITTED <- FittedML(data.frame(PRED))
             MEAN.sim <- mean(EVAL, na.rm = TRUE)
             SD.sim <- sd(EVAL, na.rm = TRUE)
-            QUANT <- quantile(EVAL, c((1 - level)/2, level + (1 - level)/2),na.rm=TRUE)
+            QUANT <- quantile(EVAL, c((1 - level)/2, level + (1 - level)/2),
+                              na.rm=TRUE)
             RES <- c(FITTED, MEAN.sim, SD.sim, QUANT[1], QUANT[2])
             outMAT <- rbind(outMAT, RES)
       }
       
-      colnames(outMAT) <- c("fit", "mean", "sd", names(QUANT[1]), names(QUANT[2]))
+      colnames(outMAT) <- c("fit", "mean", "sd", names(QUANT[1]), 
+                            names(QUANT[2]))
       rownames(outMAT) <- NULL
       
       return(outMAT)  
