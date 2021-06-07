@@ -12,6 +12,7 @@ nonlinearmod = nls(Velocity ~ beta1*Conc/(beta2 + Conc), data = data,
                    trace = TRUE)
 summary(nonlinearmod)
 
+
 # Intervalos de confianza para la respuesta media.
 
 
@@ -42,10 +43,11 @@ ci.lines<-function(){
   lines(x.new,lyv, lty=3, lwd=2, col = "black")
     }
 
+par(mfrow=c(1,1),mai=c(0.9,0.9,0.5,0.5),mgp=c(2.0,0.6,0),cex=1.2)
 plot(data$Conc,data$Velocity,pch=16,main="", cex.lab=1.2, 
-     xlab = "Concentración (ppm)", 
+     xlab = "Concentration (ppm)", 
      ylab= expression(Velocity ~ (counts/min^2)), xlim = c(0, 1.2),
-     ylim = c(50,220), col = "darkgray")
+     ylim = c(50,220), col = "darkgray", las = 1)
 x <- seq(0,1.2,0.01)
 curve(212.7*x/(0.06412+ x), add = TRUE, col = "black", lwd =2)
 ci.lines()
@@ -201,12 +203,12 @@ P = 2
 
 xnew <- seq(0,1.2,0.01) #range
 ynew = theta_opt[1]*xnew/(theta_opt[2] + xnew) 
-par(mfrow=c(1,1),mai=c(0.9,0.9,0.5,0.5),mgp=c(2.0,0.6,0),cex=1.2)
+par(mfrow=c(1,1),mai=c(0.9,0.9,0.5,0.5),mgp=c(2.0,0.6,0), cex=1.2)
 plot(data$Conc, data$Velocity, pch=16, col = "darkgray", las =1,
      xlab = "Concentration (ppm)",
      ylab = expression(Velocity ~ (counts/min^2)),
      xlim = c(0,1.2),
-     ylim = c(0,250))
+     ylim = c(50,220), cex.lab =1.2)
 lines(xnew,ynew,lwd=2)
 lines(xnew,ynew+s*norm1*sqrt(P*EFE),lwd=2,lty=3,col="black")
 lines(xnew,ynew-s*norm1*sqrt(P*EFE),lwd=2,lty=3,col="black")
@@ -250,7 +252,7 @@ predictNLS_MC <- function(object, var.pred, newdata, level = 0.95,
       for (i in 1:NR) {
             
             ## get predictor values and optional errors
-            predVAL <- newdata[i, 1]
+            predVAL <- newdata[i, 1.2]
             predERROR <- 0
             names(predVAL) <- var.pred
             names(predERROR) <- var.pred
@@ -294,7 +296,7 @@ Ajustados <- predictNLS_MC(object=nonlinearmod, var.pred = "Conc",
 Ajustados <- as.data.frame(Ajustados)
 plot(data$Conc, data$Velocity, pch=16, col = "darkgray", las =1, cex.lab=1.2,
      xlab = "Concentration (ppm)",
-     ylab = expression(Velocity ~ (counts/min^2)),ylim=c(45,220))
+     ylab = expression(Velocity ~ (counts/min^2)),ylim=c(50,220), xlim = c(0,1.2) )
 lines(seq(0.01,1.2,0.01),Ajustados$fit,lwd=2)
 lines(seq(0.01,1.2,0.01),Ajustados$`2.5%`,lwd=2, lty=3)
 lines(seq(0.01,1.2,0.01),Ajustados$`97.5%`,lwd=2, lty=3)
@@ -303,7 +305,7 @@ lines(seq(0.01,1.2,0.01),Ajustados$`97.5%`,lwd=2, lty=3)
 # Representación gráfica de los intervalos.
 
 plot(data$Conc,data$Velocity,pch=16,main="", cex.lab=1.2, 
-     xlab = "Concentración (ppm)", 
+     xlab = "Concentration (ppm)", 
      ylab= expression(Velocity ~ (counts/min^2)), xlim = c(0, 1.2),
      ylim = c(50,220), col = "darkgray")
 x <- seq(0,1.2,0.01)
@@ -325,7 +327,7 @@ lines(seq(0.01,1.2,0.01),Ajustados$`97.5%`,lwd=2, lty=5, col = "turquoise4")
 legend(x = "bottomright", c("Delta", "Bates & Watts", "Monte Carlo"),
        lty =c(5,1,5), lwd = c(2,2,2), 
        col = c("coral", "yellow3", "turquoise4"), cex = 0.7,
-       title = "Método")
+       title = "Method")
 
 
 
