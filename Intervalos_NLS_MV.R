@@ -242,8 +242,8 @@ ci.lines<-function(){
   ci<-deltaf
   uyv<-yv+ci
   lyv<-yv-ci
-  lines(x.new,uyv,lty=3, lwd=2)
-  lines(x.new,lyv,lty=3, lwd=2)
+  lines(x.new,uyv,lty=5, lwd=2, col="coral")
+  lines(x.new,lyv,lty=5, lwd=2, col="coral")
 }
 
 # Intervalos de confianza para la respuesta media
@@ -264,7 +264,7 @@ theta2 = 0.07393871
 xnew <- seq(min(data$Conc),1.2,0.01) 
 ynew = theta1*xnew/(theta2 + xnew) 
 par(mfrow=c(1,1),mai=c(0.9,0.9,0.5,0.5),mgp=c(2.0,0.6,0),cex=1.2)
-plot(data$Conc, data$Velocity, pch=20, col = "red", las =1,
+plot(data$Conc, data$Velocity, pch=16, col = "darkgray", las =1,
      xlab = "Concentration (ppm)",
      ylab = expression(Velocity ~ (counts/min^2)), ylim = c(50,220),
      xlim = c(0,1.2))
@@ -354,7 +354,7 @@ predictNLS_MV <- function(EXPR, modelo, var.pred, newdata, level = 0.95,
 Ajustados <- predictNLS_MV(EXPR=expression(b1*Conc/(b2 + Conc)), modelo=modelML, 
                            var.pred = "Conc", newdata = data.frame(x.new))
 Ajustados <- as.data.frame(Ajustados)
-plot(data$Conc, data$Velocity, pch=20, col = "red", las =1,
+plot(data$Conc, data$Velocity, pch=16, col = "darkgray", las =1,
      xlab = "Concentration (ppm)",
      ylab = expression(Velocity ~ (counts/min^2)),ylim=c(45,220))
 lines(seq(0.01,1.2,0.01),Ajustados$fit,lwd=2)
