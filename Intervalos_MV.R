@@ -65,7 +65,6 @@ betas <- modelML$par
 
 ## Intervalos de confianza para la respuesta media.
 
-
 # Método delta
 #-------------------------------------------------------------------------------
 
@@ -73,7 +72,7 @@ fgh2 <- deriv(Velocity ~ b1*Conc/(b2 + Conc), c("b1", "b2"),
               function(b1,b2,Conc){} ) 
 
 x.new <- seq(0.01, 1.2, by=0.01)
-f.new <- fgh2(222.50792836,0.07393871, x.new)
+f.new <- fgh2(modelML$par[1],modelML$par[2], x.new)
 
 g.new <- attr(f.new,"gradient")
 V.beta2 <- vcov_ml_R
@@ -98,7 +97,7 @@ plot(data$Conc,data$Velocity,pch=16,main="", cex.lab=1.2,
      ylab= expression(Velocity ~ (counts/min^2)), xlim = c(0, 1.2),
      ylim = c(50,220), col = "red")
 x <- seq(0,1.2,0.01)
-curve(222.50792836*x/(0.07393871 + x), add = TRUE, col = "black", lwd=2)
+curve(modelML$par[1]*x/(modelML$par[2] + x), add = TRUE, col = "black", lwd=2)
 ci.lines()
 
 
@@ -121,7 +120,7 @@ puromycin = function(Conc,theta1,theta2){
 }
 
 #  Teta optimo = los de max verosimilitud
-theta = matrix(c(222.5079,0.07394),2,1)
+theta = matrix(c(modelML$par[1],modelML$par[2]),2,1)
 pred = round(puromycin(data$Conc,theta[1],theta[2]),2)
 pred
 
@@ -307,7 +306,7 @@ plot(data$Conc,data$Velocity,pch=16,main="", cex.lab=1.2,
      ylab= expression(Velocity ~ (counts/min^2)), xlim = c(0, 1.2),
      ylim = c(50,220), col = "darkgray")
 x <- seq(0,1.2,0.01)
-curve(222.50792836*x/(0.07393871 + x), add = TRUE, col = "black", lwd=2)
+curve(modelML$par[1]*x/(modelML$par[2] + x), add = TRUE, col = "black", lwd=2)
 ci.lines()
 
 lines(xnew,ynew+s*norm1*sqrt(P*EFE),lwd=2,lty=1,col="yellow3")
