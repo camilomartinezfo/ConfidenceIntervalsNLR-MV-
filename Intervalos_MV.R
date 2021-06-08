@@ -310,8 +310,8 @@ x <- seq(0,1.2,0.01)
 curve(222.50792836*x/(0.07393871 + x), add = TRUE, col = "black", lwd=2)
 ci.lines()
 
-lines(xnew,ynew+summary(nonlinearmod)$sigma,lwd=2,lty=1,col="yellow3")
-lines(xnew,ynew-summary(nonlinearmod)$sigma,lwd=2,lty=1,col="yellow3")
+lines(xnew,ynew+s*norm1*sqrt(P*EFE),lwd=2,lty=1,col="yellow3")
+lines(xnew,ynew-s*norm1*sqrt(P*EFE),lwd=2,lty=1,col="yellow3")
 
 lines(seq(0.01,1.2,0.01),Ajustados$`2.5%`,lwd=2, lty=5,col="turquoise4")
 lines(seq(0.01,1.2,0.01),Ajustados$`97.5%`,lwd=2, lty=5,col="turquoise4")
