@@ -105,18 +105,97 @@ ci.lines()
 # Aproximación Bates & Watts (1988, p. 59)
 #-------------------------------------------------------------------------------
 
-theta1 = 222.50792836
-theta2 = 0.07393871
-xnew <- seq(min(data$Conc),1.2,0.01) 
-ynew = theta1*xnew/(theta2 + xnew) 
-par(mfrow=c(1,1),mai=c(0.9,0.9,0.5,0.5),mgp=c(2.0,0.6,0),cex=1.2)
+# Matriz de regresores
+X = matrix(cbind(rep(1,12),data$Conc),12,2)
+X
+
+# Vector de los valores de respuesta observados
+y <- matrix(data$Velocity)
+y
+
+# Método de Gauss-Newton 
+
+puromycin = function(Conc,theta1,theta2){
+   Vel = theta1*Conc/(theta2+Conc)
+   return(as.matrix(Vel))
+}
+
+#  Teta optimo = los de max verosimilitud
+theta = matrix(c(222.5079,0.07394),2,1)
+pred = round(puromycin(data$Conc,theta[1],theta[2]),2)
+pred
+
+# Tabla 2.1 de Bates & Watts (1988), p. 41
+table = as.data.frame(cbind(rep(1:length(data$Conc)), X[,2], y, pred))
+names(table) = c("Obs", "x", "y", "predicted_0")
+
+# Calcular los residuos y agregarlos a la tabla
+table$residual_0 = table$y - table$predicted
+
+# Matriz derivada
+derivative = function(Conc,theta1,theta2){
+   d1 = round(Conc/(theta2+Conc),4)
+   d2 = round(-theta1*Conc/(theta2+Conc)^2,2)
+   return(as.matrix(cbind(d1,d2)))
+}
+
+# Se calcula la matriz derivada para todas las observaciones 
+# y el teta inicial.
+
+V_0 = derivative(data$Conc,theta[1],theta[2])
+V_0
+
+table$der_theta1_0 = V_0[,1]
+table$der_theta2_0 = V_0[,2]
+
+# Cálculo de la suma de cuadrados residual para la iteración inicial.
+rss0 = sum(table$residual_0^2)
+
+# Descomposición QR de la matriz derivada V^0, con
+# el resultado dado en forma compacta.
+QR =qr(V_0)
+QR$qr
+
+# Reconstrucción de matrices Q y R a partir de un objeto QR.
+# En este caso obtenemos Q1 y R1
+Q1 = qr.Q(QR)
+Q1
+R1 = qr.R(QR)
+R1
+
+# Bandas para las respuestas esperadas en Conc = 0.4
+y0.4 = round(puromycin(0.4,theta[1],theta[2]),1)
+y0.4
+
+# Vector derivado
+v = derivative(0.4,theta[1],theta[2])
+v
+
+# v^T*inversa(R1)
+vTinvR = v%*%solve(R1)
+vTinvR
+
+# Norma del vector v en vR/magnitud del vector.
+norm1 = sum(vTinvR*vTinvR)^0.5
+norm1
+
+# Trazar bandas para la respuesta esperada
+s = sqrt(rss0/10)
+EFE = qf(0.95,2,10)
+P = 2
+
+xnew <- seq(0,1.2,0.01) #range
+ynew = theta[1]*xnew/(theta[2] + xnew) 
+par(mfrow=c(1,1),mai=c(0.9,0.9,0.5,0.5),mgp=c(2.0,0.6,0), cex=1.2)
 plot(data$Conc, data$Velocity, pch=16, col = "darkgray", las =1,
      xlab = "Concentration (ppm)",
-     ylab = expression(Velocity ~ (counts/min^2)), ylim = c(50,220),
-     xlim = c(0,1.2))
+     ylab = expression(Velocity ~ (counts/min^2)),
+     xlim = c(0,1.2),
+     ylim = c(50,220), cex.lab =1.2)
 lines(xnew,ynew,lwd=2)
-lines(xnew,ynew+summary(nonlinearmod)$sigma,lwd=2,lty=3)
-lines(xnew,ynew-summary(nonlinearmod)$sigma,lwd=2,lty=3)
+lines(xnew,ynew+s*norm1*sqrt(P*EFE),lwd=2,lty=3,col="black")
+lines(xnew,ynew-s*norm1*sqrt(P*EFE),lwd=2,lty=3,col="black")
+
 
 
 # Simulación de Monte Carlo 
