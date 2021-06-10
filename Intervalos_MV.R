@@ -92,10 +92,11 @@ ci.lines<-function(){
 }
 
 # Intervalos de confianza para la respuesta media
+par(mfrow=c(1,1),mai=c(0.9,0.9,0.5,0.5),mgp=c(2.0,0.6,0),cex=1.2)
 plot(data$Conc,data$Velocity,pch=16,main="", cex.lab=1.2, 
      xlab = "Concentración (ppm)", 
      ylab= expression(Velocity ~ (counts/min^2)), xlim = c(0, 1.2),
-     ylim = c(50,220), col = "red")
+     ylim = c(50,220), col = "darkgray")
 x <- seq(0,1.2,0.01)
 curve(modelML$par[1]*x/(modelML$par[2] + x), add = TRUE, col = "black", lwd=2)
 ci.lines()
@@ -317,3 +318,4 @@ lines(seq(0.01,1.2,0.01),Ajustados$`97.5%`,lwd=2, lty=5,col="turquoise4")
 
 legend(x="bottomright",c("Delta","Bates & Watts","Monte Carlo"),lty=c(5,1,5),
        lwd=c(2,2,2), col=c("coral","yellow3","turquoise4"),cex=0.7,title="Método")
+
