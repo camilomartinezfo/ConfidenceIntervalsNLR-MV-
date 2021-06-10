@@ -1,3 +1,6 @@
-# Intervalos de confianza para un modelo de regresión no lineal
+# Confidence Intervals for a nonlinear regression model 
 
-Intervalos de confianza para la respuesta media de un modelo de regresión no lineal.
+
+Confidence intervals for the average response of a nonlinear regression model.
+
+This repository has three methods for calculate confidence intervals: Delta method, Bates & Watts (1988, p. 59) and a simulation Monte Carlo (Spiess, 2018). 
