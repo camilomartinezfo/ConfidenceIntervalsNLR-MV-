@@ -1,12 +1,14 @@
-# Confidence Intervals for a nonlinear regression model 
+# Intervalos de confianza para un modelo de regresión no lineal
+
+El presente repositorio contiene tres métodos para calcular el intervalo de confianza para la respuesta media de un modelo no lineal, siendo las aproximaciones del método delta, Bates & Watts (1988, p.59) y propagación del error por medio de una simulación Monte Carlo (Spiess, 2018)
 
 
-Confidence intervals for the average response of a nonlinear regression model.
+### Propagación del error por Simulación Monte Carlo
 
-This repository has three methods for calculate confidence intervals: Delta method, Bates & Watts (1988, p. 59) and a Monte Carlo simulation (Spiess, 2018). 
+Este consiste en la propagación del error de la variable predictora, en la cual se usa como entrada la matriz de varianzas y covarianzas de los parámetros ajustados del modelo y sus parámetros estimados como media para crear una simulación normal multivariada de n muestras para cada observación i de la variable predictora (Spiess, 2013). Es decir, se generan combinaciones de parámetros simulados siguiendo la matriz de varianzas y covarianzas estimada siguiendo la tendencia central de los parámetros ajustados, por lo tanto, es importante notar que se asume una distribución normal de la variable dependiente por cada i (Spiess, 2013). 
+
+Con cada grupo de parámetros simulados se calcula la función de la variable respuesta para cada observación i. Finalmente, se obtienen estadísticos como la media, desviación estándar y cuantiles asociados al intervalo de confianza por cada observación i (Spiess, 2013). 
 
 
-### Monte Carlo Simulation
-
-It consists in error propagation of the predictor variables. This approach uses the variance and covariance matrix (vcov) of the parameters fitted of the model and predictor variable $\mu_{i}$ where for each $i$, n samples are created from a multivariate normal distribution using as input the vcov matrix (Spiess, 2013).  Hence, the assumption is that for each i there is a normal distribution of the dependent variable. After, with each sample simulated, the function of response variable is calculated. Finally, some statistics are calculated like mean, standard deviation, and quantiles of confidence intervals (Spiess, 2013).  
+ 
 
