@@ -295,3 +295,29 @@ valort <- qt(0.975,45)
 lines(x.new,Predicted+Desv*valort,lwd=2,lty=3)
 lines(x.new,Predicted-Desv*valort,lwd=2,lty=3)
 
+
+
+# Graphic representation of all the intervals.
+ci.lines<-function(){
+   
+   yv <- f.new
+   ci<-deltaf
+   uyv<-yv+ci
+   lyv<-yv-ci
+   lines(x.new,uyv,lty=5,lwd=2,col="coral")
+   lines(x.new,lyv,lty=5,lwd=2,col="coral")
+}
+
+
+plot(data$year,data$D,xlim=c(0,200),ylim=c(0,150),pch=16,bg="white",
+     col="darkgray",cex=1,lwd=1.9,xlab="Age (year)",ylab="Diameter (cm)",cex.lab=1.2)
+curve(beta2.est[1]*((1-exp(-beta2.est[2]*x))^(beta2.est[3])), add = TRUE, col = "black", lwd =2)
+ci.lines()
+lines(xnew,ynew+s*norm1*sqrt(P*EFE),lwd=2,lty=1,col="yellow3")
+lines(xnew,ynew-s*norm1*sqrt(P*EFE),lwd=2,lty=1,col="yellow3")
+lines(x.new,Predicted+Desv*valort,lwd=2,lty=5,col="turquoise4")
+lines(x.new,Predicted-Desv*valort,lwd=2,lty=5,col="turquoise4")
+
+legend(x="bottomright",c("Delta","Bates & Watts","Monte Carlo"),lty=c(5,1,5),
+       lwd=c(2,2,2), col=c("coral","yellow3","turquoise4"),cex=0.7,title="Método")
+
