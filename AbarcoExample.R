@@ -103,6 +103,98 @@ ci.lines()
 curve(beta2.est[1]*((1-exp(-beta2.est[2]*x))^(beta2.est[3])), add = TRUE, col = "black", lwd =2)
 
 
+# Approach Bates & Watts (1988, p. 59)
+#-------------------------------------------------------------------------------
+
+# Matrix of regressors
+X = matrix(cbind(rep(1,48),data$year),48,2)
+X
+
+# Vector of observed response values
+y <- matrix(data$D)
+y
+
+# Gauss-Newton Method
+
+abarco = function(A, k, c, year){
+   D = A*((1-exp(-k*year))^c)
+   return(as.matrix(D))}
+
+#  Optimal parametric estimators
+theta = matrix(c(modelo1.ML$par[1],modelo1.ML$par[2],modelo1.ML$par[3]),3,1)
+pred = round(abarco(data$year,theta[1],theta[2],theta[3]),3)
+pred
+
+# Table 2.1 from Bates & Watts (1988), p. 41
+table = as.data.frame(cbind(rep(1:length(data$year)), X[,2], y, pred))
+names(table) = c("Obs", "x", "y", "predicted_0")
+
+# Calculate the residuals and add them to the table
+table$residual_0 = table$y - table$predicted
+
+# Derived matrix
+derivative = function(year,A,k,c){
+   d1 = round(A*((1-exp(-k*year))^c),4)
+   d2 = round(A*((1-exp(-k*year))^c),2)
+   return(as.matrix(cbind(d1,d2)))
+}
+
+# The derived matrix is calculated for all observations
+# and the initial estimators.
+
+V_0 = derivative(data$year,theta[1],theta[2],theta[3])
+V_0
+
+table$der_theta1_0 = V_0[,1]
+table$der_theta2_0 = V_0[,2]
+
+# Calculation of the residual sum of squares for the initial iteration.
+rss0 = sum(table$residual_0^2)
+
+# QR decomposition of the derived matrix V^0
+QR =qr(V_0)
+QR$qr
+
+# Recovering of matrices Q and R from a QR object.
+# In this case we obtain Q1 and R1
+Q1 = qr.Q(QR)
+Q1
+R1 = qr.R(QR)
+R1
+
+# Bands for expected responses at year = 
+y0.100 = round(abarco(theta[1],theta[2],theta[3],50),5)
+y0.100
+
+# Derivate vector
+v = derivative(50,theta[1],theta[2],theta[3])
+v
+
+# v^T*(R1)^-1
+vTinvR = v%*%solve(R1)
+vTinvR
+
+# Norm of the vector vTinvR
+norm1 = sum(vTinvR*vTinvR)^0.5
+norm1
+
+# Trazar bandas para la respuesta esperada
+s = sqrt(rss0/44)
+EFE = qf(0.95,4,44)
+P = 4
+
+xnew <- seq(1,200,0.1) #range
+ynew = theta[1]*((1-exp(-theta[2]*xnew))^theta[3])
+par(mfrow=c(1,1),mai=c(0.9,0.9,0.5,0.5),mgp=c(2.0,0.6,0), cex=1.2)
+plot(data$year, data$D, pch=16, col = "darkgray", las =1,
+     xlab = "Age (year)",
+     ylab = "Diameter (cm)",
+     xlim = c(1,210),
+     ylim = c(0,150), cex.lab =1.2)
+lines(xnew,ynew,lwd=2)
+lines(xnew,ynew+s*norm1*sqrt(P*EFE),lwd=2,lty=3,col="black")
+lines(xnew,ynew-s*norm1*sqrt(P*EFE),lwd=2,lty=3,col="black")
+
 
 ## IC: Monte Carlo method
 
