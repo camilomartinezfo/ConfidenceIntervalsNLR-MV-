@@ -16,7 +16,7 @@ En el código se estima el vector gradiente para cada una de las derivadas parci
 
 ### Propagación del error por Simulación Monte Carlo
 
-Este consiste en la propagación del error de la variable predictora, en la cual se usa como entrada la matriz de varianzas y covarianzas de los parámetros ajustados del modelo y sus parámetros estimados como media para crear una simulación normal multivariada de n muestras para cada observación i de la variable predictora (Spiess, 2013). Es decir, se generan combinaciones de parámetros simulados siguiendo la matriz de varianzas y covarianzas estimada siguiendo la tendencia central de los parámetros ajustados, por lo tanto, es importante notar que se asume una distribución normal de la variable dependiente por cada i (Spiess, 2013). 
+Este consiste en la propagación del error de la variable predictora, en la cual se usa como entrada la matriz de varianzas y covarianzas de los parámetros ajustados del modelo y sus parámetros estimados como media para crear una simulación normal multivariada de n muestras para cada observación i de la variable predictora (Spiess, 2013). Es decir, se generan combinaciones de parámetros simulados siguiendo la matriz de varianzas y covarianzas estimada y siguiendo la tendencia central de los parámetros ajustados, por lo tanto, es importante notar que se asume una distribución normal de la variable dependiente por cada i (Spiess, 2013). 
 
 Con cada grupo de parámetros simulados se calcula la función de la variable respuesta para cada observación i. Finalmente, se obtienen estadísticos como la media, desviación estándar y cuantiles asociados al intervalo de confianza por cada observación i (Spiess, 2013). 
 
