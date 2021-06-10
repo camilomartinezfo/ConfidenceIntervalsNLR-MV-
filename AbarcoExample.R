@@ -59,6 +59,7 @@ rownames (results) <- c("A","k","c","sigma")
 print(results,digits=5)
 
 
+<<<<<<< HEAD
 
 ## IC: delta method 
 fgh2 <- deriv(D ~ A*((1-exp(-k*year))^c), c("A", "k", "c"), 
@@ -105,3 +106,5 @@ ci.lines()
 
 
 
+=======
+>>>>>>> 0cee0444b4d891d901d0b8e404441cbafce5dddf
