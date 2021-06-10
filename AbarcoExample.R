@@ -76,7 +76,7 @@ colnames(VCOV) <- c("A","k","c")
 V.beta2 <- VCOV
 GS=rowSums((g.new%*%V.beta2)*g.new)
 
-s.t <- qt(0.975,45)
+s.t <- qt(0.975,44)
 deltaf <- sqrt(GS)*s.t
 df.delta <- data.frame(x=x.new, f=f.new, lwr.conf=f.new-deltaf, upr.conf=f.new+deltaf)
 head(df.delta)
@@ -96,9 +96,9 @@ ci.lines<-function(){
       lines(x.new,lyv,lty=3,lwd=2,col="black")
 }
 
-
+par(mfrow=c(1,1),mai=c(0.9,0.9,0.5,0.5),mgp=c(2.0,0.6,0), cex=1.2)
 plot(data$year,data$D,xlim=c(0,200),ylim=c(0,150),pch=16,bg="white",
-     col="darkgray",cex=1,lwd=1.9,xlab="Age (years)",ylab="Diameter (cm)",cex.lab=1.2)
+     col="darkgray",cex=1,lwd=1.9,xlab="Age (year)",ylab="Diameter (cm)",cex.lab=1.2)
 ci.lines()
 curve(beta2.est[1]*((1-exp(-beta2.est[2]*x))^(beta2.est[3])), add = TRUE, col = "black", lwd =2)
 
@@ -186,7 +186,7 @@ P = 4
 xnew <- seq(1,200,0.1) #range
 ynew = theta[1]*((1-exp(-theta[2]*xnew))^theta[3])
 par(mfrow=c(1,1),mai=c(0.9,0.9,0.5,0.5),mgp=c(2.0,0.6,0), cex=1.2)
-plot(data$year, data$D, pch=16, col = "darkgray", las =1,
+plot(data$year, data$D, pch=16, col = "darkgray",
      xlab = "Age (year)",
      ylab = "Diameter (cm)",
      xlim = c(1,210),
@@ -289,8 +289,9 @@ for(i in 1:1991){
 }
 
 plot(data$year,data$D,xlim=c(0,200),ylim=c(0,150),pch=16,bg="white",
-     col="darkgray",cex=1,lwd=1.9,xlab="Age (years)",ylab="Diameter (cm)",cex.lab=1.2)
+     col="darkgray",cex=1,lwd=1.9,xlab="Age (year)",ylab="Diameter (cm)",cex.lab=1.2)
 curve(beta2.est[1]*((1-exp(-beta2.est[2]*x))^(beta2.est[3])), add = TRUE, col = "black", lwd =2)
 valort <- qt(0.975,45)
 lines(x.new,Predicted+Desv*valort,lwd=2,lty=3)
 lines(x.new,Predicted-Desv*valort,lwd=2,lty=3)
+

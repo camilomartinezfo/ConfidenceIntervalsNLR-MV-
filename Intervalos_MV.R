@@ -1,12 +1,12 @@
-# lectura de datos.
+# reading data.
 data = read.csv("Puromycin.csv")
 
 
 ################################################################################
-################ Estimadores de Máxima verosimilitud ###########################
+################ Maximum likelihood estimators ###########################
 ################################################################################
 
-# Estimador de máxima verosimilitud
+# Maximum likelihood estimator
 
 library(optimr)
 
@@ -38,20 +38,20 @@ modelML = with(subset(data,!is.na(Velocity) & !is.na(Conc)),
                       method = "Nelder-Mead",
                       hessian = TRUE))
 
-# Matriz de información de fisher
+# Fisher's information matrix
 
 FIM <- solve(modelML$hessian)
 
 vcov_ml_R <- FIM[-3,-3] 
 
-# Desviación estándar
+# Standard deviation
 
 se <- sqrt(diag(FIM))
 
-# Cuántil t
+# Quantile t
 t <- modelML$par/se
 
-# Valor P
+# P value
 pval <- 2*(1-pt(abs(t),length(data$Conc)-3))
 
 results <- as.matrix(cbind(modelML$par,se,t,pval))
@@ -59,13 +59,13 @@ colnames (results) <- c("parameter","se","t","p")
 rownames (results) <- c("beta1","beta2","sigma")
 print(results,digits=5)
 
-# Estimadores paramétricos.
+# Parametric estimators.
 betas <- modelML$par
 
 
-## Intervalos de confianza para la respuesta media.
+## Confidence intervals for the mean response.
 
-# Método delta
+# Delta method
 #-------------------------------------------------------------------------------
 
 fgh2 <- deriv(Velocity ~ b1*Conc/(b2 + Conc), c("b1", "b2"), 
@@ -91,7 +91,7 @@ ci.lines<-function(){
       lines(x.new,lyv,lty=3, lwd=2, col="black")
 }
 
-# Intervalos de confianza para la respuesta media
+# Confidence intervals for the mean response
 par(mfrow=c(1,1),mai=c(0.9,0.9,0.5,0.5),mgp=c(2.0,0.6,0),cex=1.2)
 plot(data$Conc,data$Velocity,pch=16,main="", cex.lab=1.2, 
      xlab = "Concentración (ppm)", 
@@ -102,45 +102,49 @@ curve(modelML$par[1]*x/(modelML$par[2] + x), add = TRUE, col = "black", lwd=2)
 ci.lines()
 
 
-# Aproximación Bates & Watts (1988, p. 59)
+# Bates & Watts Approach (1988, p. 59)
 #-------------------------------------------------------------------------------
 
-# Matriz de regresores
+# Matrix of regressors
 X = matrix(cbind(rep(1,12),data$Conc),12,2)
 X
 
-# Vector de los valores de respuesta observados
+# Vector of observed response values
 y <- matrix(data$Velocity)
 y
 
-# Método de Gauss-Newton 
+# Gauss-Newton method
 
 puromycin = function(Conc,theta1,theta2){
    Vel = theta1*Conc/(theta2+Conc)
    return(as.matrix(Vel))
 }
 
-#  Teta optimo = los de max verosimilitud
+# Parametric estimators
+
 theta = matrix(c(modelML$par[1],modelML$par[2]),2,1)
 pred = round(puromycin(data$Conc,theta[1],theta[2]),2)
 pred
 
-# Tabla 2.1 de Bates & Watts (1988), p. 41
+# Table 2.1 from Bates & Watts (1988), p. 41
+
 table = as.data.frame(cbind(rep(1:length(data$Conc)), X[,2], y, pred))
 names(table) = c("Obs", "x", "y", "predicted_0")
 
-# Calcular los residuos y agregarlos a la tabla
+# Calculate the residuals
 table$residual_0 = table$y - table$predicted
 
-# Matriz derivada
+# Derived matrix
+
 derivative = function(Conc,theta1,theta2){
    d1 = round(Conc/(theta2+Conc),4)
    d2 = round(-theta1*Conc/(theta2+Conc)^2,2)
    return(as.matrix(cbind(d1,d2)))
 }
 
-# Se calcula la matriz derivada para todas las observaciones 
-# y el teta inicial.
+
+# The derived matrix is calculated for all observations
+# and the initial theta.
 
 V_0 = derivative(data$Conc,theta[1],theta[2])
 V_0
@@ -148,38 +152,41 @@ V_0
 table$der_theta1_0 = V_0[,1]
 table$der_theta2_0 = V_0[,2]
 
-# Cálculo de la suma de cuadrados residual para la iteración inicial.
+# Calculation of the residual sum of squares for the initial iteration.
+
 rss0 = sum(table$residual_0^2)
 
-# Descomposición QR de la matriz derivada V^0, con
-# el resultado dado en forma compacta.
+# QR decomposition of the derived matrix V^0, with
+# the result given in compact form.
+
 QR =qr(V_0)
 QR$qr
 
-# Reconstrucción de matrices Q y R a partir de un objeto QR.
-# En este caso obtenemos Q1 y R1
+# Reconstruction of matrices Q and R from a QR object.
+# In this case we obtain Q1 and R1
+
 Q1 = qr.Q(QR)
 Q1
 R1 = qr.R(QR)
 R1
 
-# Bandas para las respuestas esperadas en Conc = 0.4
+# Bands for expected responses at Conc = 0.4
 y0.4 = round(puromycin(0.4,theta[1],theta[2]),1)
 y0.4
 
-# Vector derivado
+# Derivative vector
 v = derivative(0.4,theta[1],theta[2])
 v
 
-# v^T*inversa(R1)
+#v^T*inverse(R1)
 vTinvR = v%*%solve(R1)
 vTinvR
 
-# Norma del vector v en vR/magnitud del vector.
+# Norm of the vector v in vR
 norm1 = sum(vTinvR*vTinvR)^0.5
 norm1
 
-# Trazar bandas para la respuesta esperada
+# Plot bands for the expected response
 s = sqrt(rss0/10)
 EFE = qf(0.95,2,10)
 P = 2
@@ -197,8 +204,7 @@ lines(xnew,ynew+s*norm1*sqrt(P*EFE),lwd=2,lty=3,col="black")
 lines(xnew,ynew-s*norm1*sqrt(P*EFE),lwd=2,lty=3,col="black")
 
 
-
-# Simulación de Monte Carlo 
+# Monte Carlo simulation
 #-------------------------------------------------------------------------------
 
 FittedML <- function(Conc){
@@ -287,9 +293,7 @@ lines(seq(0.01,1.2,0.01),Ajustados$`2.5%`,lwd=2, lty=3)
 lines(seq(0.01,1.2,0.01),Ajustados$`97.5%`,lwd=2, lty=3)
 
 
-
-
-# Representación gráfica de los intervalos.
+# Graphic representation of the intervals.
 
 ci.lines<-function(){
       
