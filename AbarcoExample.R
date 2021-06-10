@@ -13,8 +13,8 @@ pos2 <- which(data$Drelativa==1)
 data <- data[-c(pos2),]
 
 
-## Maxima verosimilitud
-loglik.sweetgum = function(parameters, year, D)
+## Maximum Likelihood Estimators
+loglik.bertalanffy = function(parameters, year, D)
 {
       logL =  tryCatch(
             {
@@ -37,7 +37,7 @@ parameters = c(A =  140, k = 0.007, c = 1.50, sigma = 1)
 
 modelo1.ML = with(subset(data,!is.na(D) & !is.na(year)),
                   optimr(par = parameters,
-                         fn  = loglik.sweetgum,
+                         fn  = loglik.bertalanffy,
                          year   = year,
                          D   = D,
                          control = list(maxiter=1000),
@@ -274,14 +274,23 @@ predictNLS_MV <- function(EXPR, modelo, var.pred, newdata, level = 0.95,
 }
 
 
-Ajustados <- predictNLS_MV(EXPR=expression(A*((1-exp(-k*year))^c)), modelo=modelo1.ML, 
+fitted <- predictNLS_MV(EXPR=expression(A*((1-exp(-k*year))^c)), modelo=modelo1.ML, 
                            var.pred = "year", newdata = data.frame(x.new))
-Ajustados <- as.data.frame(Ajustados)
+fitted <- as.data.frame(fitted)
+
+Predicted <- c()
+for(i in 1:1991){
+      Predicted[i] <- fitted$fit[[i]]
+}
+
+Desv <- c()
+for(i in 1:1991){
+      Desv[i] <- fitted$sd[[i]]
+}
+
 plot(data$year,data$D,xlim=c(0,200),ylim=c(0,150),pch=16,bg="white",
      col="darkgray",cex=1,lwd=1.9,xlab="Age (years)",ylab="Diameter (cm)",cex.lab=1.2)
 curve(beta2.est[1]*((1-exp(-beta2.est[2]*x))^(beta2.est[3])), add = TRUE, col = "black", lwd =2)
 valort <- qt(0.975,45)
-lines(x.new,Ajustados$fit+Ajustados$sd*valort,lwd=2,lty=3)
-lines(x.new,Ajustados$fit-Ajustados$sd*valort,lwd=2,lty=3)
-
-
+lines(x.new,Predicted+Desv*valort,lwd=2,lty=3)
+lines(x.new,Predicted-Desv*valort,lwd=2,lty=3)
