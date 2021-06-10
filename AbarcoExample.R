@@ -172,12 +172,10 @@ predictNLS_MV <- function(EXPR, modelo, var.pred, newdata, level = 0.95,
             SD.sim <- sd(EVAL, na.rm = TRUE)
             QUANT <- quantile(EVAL, c((1 - level)/2, level + (1 - level)/2),
                               na.rm=TRUE)
-            RES <- c(FITTED, MEAN.sim, SD.sim, QUANT[1], QUANT[2])
-            outMAT <- rbind(outMAT, RES)
+            outMAT <- rbind(outMAT, c(FITTED, MEAN.sim, SD.sim))
       }
       
-      colnames(outMAT) <- c("fit", "mean", "sd", names(QUANT[1]), 
-                            names(QUANT[2]))
+      colnames(outMAT) <- c("fit", "mean", "sd")
       rownames(outMAT) <- NULL
       
       return(outMAT)  
