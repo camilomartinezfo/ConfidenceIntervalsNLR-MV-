@@ -1,10 +1,10 @@
 
-# lectura de datos.
+# reading data.
 data = read.csv("Puromycin.csv")
 
 
 ################################################################################
-################ Estimadores de Mínimos Cuadrados ##############################
+################ Least Squares Estimators ##############################
 ################################################################################
 
 nonlinearmod = nls(Velocity ~ beta1*Conc/(beta2 + Conc), data = data, 
@@ -13,10 +13,10 @@ nonlinearmod = nls(Velocity ~ beta1*Conc/(beta2 + Conc), data = data,
 summary(nonlinearmod)
 
 
-# Intervalos de confianza para la respuesta media.
+# Confidence intervals for the mean response.
 
+# Delta method
 
-# Método delta
 #-------------------------------------------------------------------------------
 
 fgh2 <- deriv(Velocity ~ beta1*Conc/(beta2 + Conc), c("beta1", "beta2"), 
@@ -53,7 +53,7 @@ curve(212.7*x/(0.06412+ x), add = TRUE, col = "black", lwd =2)
 ci.lines()
 
 
-# Aproximación Bates & Watts (1988, p. 59)
+# Bates & Watts Approach (1988, p. 59)
 #-------------------------------------------------------------------------------
 
 # Matrix containing regressors
@@ -218,7 +218,7 @@ lines(xnew,ynew+s*norm1*sqrt(P*EFE),lwd=2,lty=3,col="black")
 lines(xnew,ynew-s*norm1*sqrt(P*EFE),lwd=2,lty=3,col="black")
 
 
-# Simulación de Monte Carlo
+# Monte Carlo simulation
 #-------------------------------------------------------------------------------
 
 predictNLS_MC <- function(object, var.pred, newdata, level = 0.95, 
@@ -305,7 +305,7 @@ lines(seq(0.01,1.2,0.01),Ajustados$`2.5%`,lwd=2, lty=3)
 lines(seq(0.01,1.2,0.01),Ajustados$`97.5%`,lwd=2, lty=3)
 
 
-# Representación gráfica de los intervalos.
+# Graphic representation of the intervals.
 
 plot(data$Conc,data$Velocity,pch=16,main="", cex.lab=1.2, 
      xlab = "Concentration (ppm)", 
