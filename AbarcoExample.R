@@ -13,7 +13,7 @@ pos2 <- which(data$Drelativa==1)
 data <- data[-c(pos2),]
 
 
-## Maxima verosimilitud
+## Maximum Likelihood Estimators
 loglik.sweetgum = function(parameters, year, D)
 {
       logL =  tryCatch(
@@ -277,11 +277,20 @@ predictNLS_MV <- function(EXPR, modelo, var.pred, newdata, level = 0.95,
 Ajustados <- predictNLS_MV(EXPR=expression(A*((1-exp(-k*year))^c)), modelo=modelo1.ML, 
                            var.pred = "year", newdata = data.frame(x.new))
 Ajustados <- as.data.frame(Ajustados)
+
+Predicted <- c()
+for(i in 1:1991){
+      Predicted[i] <- Ajustados$fit[[i]]
+}
+
+Desv <- c()
+for(i in 1:1991){
+      Desv[i] <- Ajustados$sd[[i]]
+}
+
 plot(data$year,data$D,xlim=c(0,200),ylim=c(0,150),pch=16,bg="white",
      col="darkgray",cex=1,lwd=1.9,xlab="Age (years)",ylab="Diameter (cm)",cex.lab=1.2)
 curve(beta2.est[1]*((1-exp(-beta2.est[2]*x))^(beta2.est[3])), add = TRUE, col = "black", lwd =2)
 valort <- qt(0.975,45)
-lines(x.new,Ajustados$fit+Ajustados$sd*valort,lwd=2,lty=3)
-lines(x.new,Ajustados$fit-Ajustados$sd*valort,lwd=2,lty=3)
-
-
+lines(x.new,Predicted+Desv*valort,lwd=2,lty=3)
+lines(x.new,Predicted-Desv*valort,lwd=2,lty=3)
