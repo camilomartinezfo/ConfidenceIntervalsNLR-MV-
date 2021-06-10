@@ -204,7 +204,7 @@ lines(xnew,ynew+s*norm1*sqrt(P*EFE),lwd=2,lty=3,col="black")
 lines(xnew,ynew-s*norm1*sqrt(P*EFE),lwd=2,lty=3,col="black")
 
 
-# Monte Carlo simulation
+# Monte Carlo simulation (Spiess, 2013)
 #-------------------------------------------------------------------------------
 
 FittedML <- function(Conc){

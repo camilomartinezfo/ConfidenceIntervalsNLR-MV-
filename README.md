@@ -23,3 +23,16 @@ La aproximación de Bates & Watts (1988) , para regresión no lineal emplea la d
 Este método consiste en la propagación del error de la variable predictora. Se usa como entrada la matriz de varianzas y covarianzas de los estimadores paramétricos, y su valor estimado como media. A partir de estos valores, se genera una simulación normal multivariada de n muestras, para cada observación i de la variable predictora (Spiess, 2013). Es decir, se reproducen combinaciones de estimadores paramétricos simulados siguiendo la matriz de varianzas y covarianzas estimada, y la tendencia central de los $\hat{beta}$. Además, se asume una distribución normal de la variable dependiente por cada i (Spiess, 2013). 
 
 Con cada grupo de estimadores paramétricos simulados se calcula la función de la variable respuesta para cada observación i. Finalmente, se obtienen estadísticos como la media, desviación estándar y cuantiles asociados al intervalo de confianza por cada observación i (Spiess, 2013). 
+
+
+
+### Referencias 
+
+
+Bates, D. M., & Watts, D. G. (1988). Nonlinear regression analysis and its applications (Vol. 2). New York: Wiley.
+
+Spiess, A. (2013). predictNLS (Part 1, Monte Carlo simulation): confidence intervals for ‘nls’ models. R-bloggers. Obtenido de https://www.r-bloggers.com/2013/08/predictnls-part-1-monte-carlo-simulation-confidence-intervals-for-nls-models/
+
+Spiess, A. (2018). propagate: Propagation of Uncertainty. R package version 1.0-6. Obtenido de https://CRAN.R-project.org/package=propagate
+
+
