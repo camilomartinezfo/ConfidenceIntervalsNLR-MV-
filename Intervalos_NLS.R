@@ -106,7 +106,7 @@ rss0 = sum(table$residual_0^2)
 
 # Descomposición QR de la matriz derivada V^0, con
 # el resultado dado en forma compacta.
-QR =qr(V_0)
+QR = qr(V_0)
 QR$qr
 
 # Reconstrucción de matrices Q y R a partir de un objeto QR.
