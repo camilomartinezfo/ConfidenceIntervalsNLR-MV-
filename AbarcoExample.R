@@ -58,3 +58,4 @@ colnames (results) <- c("parameter","se","t","p")
 rownames (results) <- c("A","k","c","sigma")
 print(results,digits=5)
 
+
