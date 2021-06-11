@@ -24,7 +24,7 @@ Este método consiste en la propagación del error de la variable predictora. Se
 
 Con cada grupo de estimadores paramétricos simulados se calcula la función de la variable respuesta para cada observación i. Finalmente, se obtienen estadísticos como la media, desviación estándar y cuantiles asociados al intervalo de confianza por cada observación i (Spiess, 2013). 
 
-
+h<sub>&theta;</sub>(x) = &theta;<sub>o</sub> x + &theta;<sub>1</sub>x
 
 ### Referencias 
 
