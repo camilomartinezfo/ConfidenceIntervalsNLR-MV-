@@ -20,7 +20,7 @@ La aproximación de Bates & Watts (1988) , para regresión no lineal emplea la d
 
 ### Propagación del error por Simulación Monte Carlo
 
-Este método consiste en la propagación del error de la variable predictora. Se usa como entrada la matriz de varianzas y covarianzas de los estimadores paramétricos, y su valor estimado como media. A partir de estos valores, se genera una simulación normal multivariada de n muestras, para cada observación i de la variable predictora (Spiess, 2013). Es decir, se reproducen combinaciones de estimadores paramétricos simulados siguiendo la matriz de varianzas y covarianzas estimada, y la tendencia central de los &beta;<sub/>i estimados. Además, se asume una distribución normal de la variable dependiente por cada i (Spiess, 2013). 
+Este método consiste en la propagación del error de la variable predictora. Se usa como entrada la matriz de varianzas y covarianzas de los estimadores paramétricos, y su valor estimado como media. A partir de estos valores, se genera una simulación normal multivariada de n muestras, para cada observación i de la variable predictora (Spiess, 2013). Es decir, se reproducen combinaciones de estimadores paramétricos simulados siguiendo la matriz de varianzas y covarianzas estimada, y la tendencia central de los &beta;<sub/i> estimados. Además, se asume una distribución normal de la variable dependiente por cada i (Spiess, 2013). 
 
 Con cada grupo de estimadores paramétricos simulados se calcula la función de la variable respuesta para cada observación i. Finalmente, se obtienen estadísticos como la media, desviación estándar y cuantiles asociados al intervalo de confianza por cada observación i (Spiess, 2013). 
 
